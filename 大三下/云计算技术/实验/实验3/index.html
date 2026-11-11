@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>薛润泽个人主页</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <style>
+        /* 新增图片容器样式 */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        .image-container {
+            width: 50vw;  /* 占据屏幕宽度50% */
+            max-width: 800px;
+            height: 50vh; /* 占据屏幕高度50% */
+            margin: 2rem auto;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .new-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;  /* 保持原始比例[3](@ref) */
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        /* 悬停放大效果 */
+        .new-image:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section id="home" class="hero">
+            <div class="image-container">
+                <img src="show.png" alt="个人展示" class="new-image">
+            </div>
+            <h1>欢迎访问薛润泽主页</h1>
+            <p>亲爱的老师 | 亲爱的助教</p>
+        </section>
+    </main>
+</body>
+</html>

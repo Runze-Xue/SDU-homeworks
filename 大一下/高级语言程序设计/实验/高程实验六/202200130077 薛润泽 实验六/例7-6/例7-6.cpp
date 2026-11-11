@@ -1,0 +1,35 @@
+﻿#include<iostream>
+
+using namespace std;
+
+class Base1 {
+public:
+	int var;
+	void fun() { cout << "Member of Base1" << endl; }
+	void fun(int a);
+};
+class Base2 {
+public:
+	int var;
+	void fun() { cout << "Member of Base2" << endl; }
+	void fun(int a, int b);
+};
+class Derived :public Base1, public Base2 {
+public:
+	int var;
+	void fun() { cout << "Member of Derived" << endl; }
+};
+
+int main() {
+	Derived d;
+	Derived* p = &d;
+	d.var = 1;
+	d.fun();
+	d.Base1::var = 2;
+	d.Base1::fun();
+	d.Base2::var = 3;
+	d.Base2::fun();
+	d.fun(1);
+	d.fun(2, 3);
+	return 0;
+}

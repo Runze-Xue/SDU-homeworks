@@ -1,0 +1,274 @@
+含有公式推导的模型：RL, GNN
+self-attention的图，encoder图，decoder 图
+大纲：
+1、三套题划分重点，看重点网课
+2、复习三套题相关重点内容
+3、结合重点摘要复习，各个ppt？
+
+各PPT内容概要：
+1、
+（1）图片分类
+（2）最近邻分类
+（3）线性分类
+
+2、
+训练神经网络的7个步骤
+
+3、
+（1）改进深度神经网络
+（2）参数更新（AdaGrad, Adam，超参数，正则化）
+
+4、传统卷积神经网络
+全连接层，卷积层，感受野，池化层，
+全连接网络层的每个神经元不需要看整张图，只需要关心对应的Receptive field
+5、可视化CNN
+6、现代CNN
+（1）几个现代CNN
+（2）残差神经网络
+
+7、RNN 循环神经网络
+（1）LSTM
+8、Attention机制与Transformer
+（1）RNN、Attention处理序列到序列模型
+
+10、Transfer Learning 迁移学习
+（1）domain-adversarial training
+（2）zero-shot learning
+（3）transfer learning overview
+11、Generative Adversarial Network 生成对抗网络
+（1）basic idea of GAN
+（2）GAN as structured learning
+（3）Can Generator learn by itself？
+（4）Can Discriminator generate？
+（5）a little bit theory
+
+12、Reinforcement Learning 强化学习
+13、Graph Neural Networks图神经网络
+14、Foundation Model 基础模型
+
+复习策略：
+根据3套卷，先看网课
+（1）CNN基础知识 网课 √ 卷内容 √ ppt通读 √
+（2）Foundation Model（以self-supervised learning为例）网课√ ppt通读 √ 科普性质
+（3）transfer learning 网课 √ ppt通读 √
+（4）GAN 生成式对抗神经网络 网课 √ ppt通读 √
+（5）Structured Learning（包含在 GAN 网课里）√
+（6）RNN 网课 √ 课件 √
+（7）Reinforcement Learning 强化学习 网课 √ 设计大量公式，需要深入学习 √
+（8）GNN 课件 √
+（9）Backpropagation √
+（10）transformer 网课， 课件
+（11）改进DNN有相关网课，强化学习有网课 √，可视化没有网课，图神经网络没有网课 √，Basis没有网课√
+待做：
+1、复习 CNN可视化，CNN 特例学习
+2、为什么在CNN中，有max pooling 操作，却可以做gradient decent？
+虽然max pooling操作是不可微的，但是我们可以在前向传播时记住最大值的位置，然后在反向传播时只将梯度传递给最大值，其他位置传递0
+
+粗略内容：
+1、强化学习
+强化学习解决的问题是序贯决策问题，通过让智能体与环境交互，学习策略以最大化累积奖励的机器学习方法。
+强化学习难点： Reward delay；Agent要学会去探索世界
+强化学习方法分成两块：policy-based 方法(学一个 actor)和 value-based 方法(学一个critic)。
+neural network 做 actor的好处：1、穷举所有样例是不现实的，而neural network可以举一反三，比较generalized，可以处理没见过的信息。
+怎么看一个actor的好坏？计算 total reward的期望值，好的actor的期望值比较大。 
+为什么要训练一个network而不是做一个lookup table来处理输入？
+因为训练一个network的泛化能力更强
+强化学习公式
+序列在某个策略下发生概率：P（τ|θ） = π xxx
+R_平均 = 各个序列的R × 序列发生概率
+R_平均通常用实际发生R的平均来估计
+知道了R_平均，就要求使得R_平均最大的策略参数θ值。
+对R_平均中每个θ参数求导，得到δR_平均
+（1）包含哪些元素？
+Basic element： agent，environment，goal
+Main element：state，action，award
+core element：policy，value
+（2）算法的整体框架互动交互
+（3）反馈的三种方法
+基于策略（policy-based）的方法；
+基于价值（value-based）的方法；
+actor-critic方法
+（4）怎样进行强化学习的训练
+（5）智能体agent的数据怎样得到？
+与环境交互中得到。agent在与环境进行交互时，会经历一系列的状态转移和动作选择，从而收集到状态、动作和奖励数据，用以调整策略从而最大化累积奖励。
+（6）怎样更新自己的策略
+1、基于价值的算法
+学习一个价值函数，根据价值函数来推导出策略。
+状态价值函数V(s)，评估在状态s下，遵循某个策略π能获得的期望回报
+动作价值函数Q(s, a)，评估在某个状态s下，执行动作a然后遵循某个策略π能获得的期望汇报。
+基于价值的算法更新策略的方式通常是贪婪策略或者 ε-贪婪策略
+比如Q-learning算法。
+2、基于策略的算法
+直接学习策略π(a|s)，即在给定状态s下选择动作a的概率。通过计算策略梯度来更新策略参数。
+3、actor-critic算法
+（7）和分类问题的相同点和不同点
+相同点：策略梯度函数中 p(a_t | s_t, θ)这一项可以看做是分类问题，看做把s_t作为输入，输出越接近a_t越好
+不同点：强化学习由于输出域太大，没有具体标签。而分类问题往往对每一类都有具体标签
+（8）policy-base是什么
+policy-base 是直接训练一个策略函数，用来使得R的加和值最大
+为什么要用log p(a_t|s_t, θ)？用做正则化，防止模型偏向出现几率大的case
+（9）policy-baseline是什么？
+	防止没有被采样到的高reward 的actions组几率下降，所以要对R(τ) - b，只有τ好于baseline才让它增加，否则就减少
+（10）策略梯度是什么（要求手写）
+1/N Σ Σ R（τ^n）log p(a_t | s_t, θ)
+（11）什么是Q - learning？
+Q-learning是一种value-based network学习方法，方程定义为 Qπ(s, a)，用以计算在策略π，状态s下，选择动作a的累积reward是多少，同时还可以用以更新π。
+2、大语言模型 （基础模型?）
+（1）定义是什么 ：Foundation Model 是一类在广泛的数据集上进行训练（通常使用大规模自监督训练），并且可以适用于较广范围的下游任务中的模型。这些模型通过预训练学习到丰富的知识表示和底层特征，然后可以通过微调、提示工程、上下文学习等方式，快速适应并解决各种特定的任务。
+（2）有哪些应用？医疗保健与生物医药；法律；教育；
+（3）有什么负面影响。扩大社会不平等，存在误用和滥用，环境问题训练设计大量碳排放，合法性，对经济产生影响，伦理问题
+3、图神经网络
+（1）GCN? 有哪几类
+GCN 图卷积神经网络，核心思想是聚集邻居信息。
+经典图神经网络有GCN，GraphSAGE,GAT
+（2）节点中的特征是怎么更新的
+h ^(k+1) _v = 激活函数( Σ h ^k _neribor / N + B * h^k _v )
+（3）需要用到两个矩阵：do矩阵，邻接矩阵
+矩阵形式 H^(k+1) = D^-1AH^k
+对于图G，一个GCN的输入为特征矩阵X （存储每个节点特征）与邻接矩阵A （记录顶点的neighbors信息）
+（4）拓扑结构的参数？
+见更新公式
+（5）怎样对特征向量进行更新
+见更新公式
+归一化使用对角归一化
+（6）和 CNN有什么联系？
+GCN的思想是卷积的思想，取每个节点邻居的平均作为一种卷积形式，从而获得不同层特征。
+GCN存在的问题，昂贵的计算成本，较差的迁移能力
+4、GAN Generative Adversarial Network 生成式对抗网络
+（1）生成式对抗网络的判别器、生成器是什么？
+生成器：generator输入一个从如正态分布向量中采样的随机数组成的向量，输出一个训练数据类型的数据，如图片
+判别器 Discriminator：输入一个如图片的训练数据，输出一个与二次元人物相似值，表示是真实数据的可能性
+（2）训练是怎么进行的？
+	首先给generator 和 discriminator 随机初始化
+	固定generator，然后给generator输入向量，得到输出图片。用实际图片和generator输出图片作为discriminator的输入，让discriminator做二分类。
+	然后固定住discriminator，训练generator，用generator的输出作为discriminator的输入，从discriminator中得到评分，调整generator，让该评分越大越好。
+	重复上面对discriminator分类的训练以及generator最大化评分的训练。
+（3）Structured Learning 是什么？
+	Structured Learning 处理的是输入和输出都具有内部结构的对象。
+	为什么Structured Learning 是具有挑战性的？
+1、类似one-shot/Zero-shot Learning ，结构学习的输入域和输出域很大，机器需要在testing识别遇到新数据、生成新数据，多数的test中的class 在training中没有example。
+2、机器要有大局观，需要自己做planning，虽然文字是一个一个输出，但是最终要产生一个人能看懂的句子。
+
+Benefit of GAN
+从Discriminator的角度看，容易解argmaxD(x)，从而得到negative的图片
+从Generator的角度，可以依靠discriminator学习到全局视角
+（4）Structured Learning 的方法
+ 	使用Generator 和Discriminator, Generator 来生成结构层的物体，Discriminator 用来衡量生成物并找到最优选择
+（5）结构和功能是什么。结果和功能的区别是什么？
+
+5、transformer模型
+（1）微调是怎么应用到transformer里的，或者微调是什么？
+（2）transformer的原理，q，k，v每一部分是怎么计算的，注意力权重是怎么相乘的
+缩放点注意力权重计算 q·v  / 根号 d
+（3）并行运算的原理，结构图
+并行计算原理：1、自注意力机制的并行性：在计算注意力权重时，可以同时计算所有位置的Query和Key之间的点积； 2、编码器和解码器的并行性：编码器和解码器中的每一层都可以并行处理序列中的所有位置
+（4）编码器和解码器
+编码器：input，positional encoding，multi-head self-attention，resnet，layernorm，mlp，resnet，layernorm
+解码器：input, positional encoding, masked multi-head self-attention, resnet, layernorm, + encoder, multi-head attention（本提供q，encoder 提供k，v），resnet(本地提供源)， norm，MLP，res，norm，FC
+6、迁移学习
+（1）记住图表（source data与 target data）；
+（2）zero shot 和one shot是什么？
+	one-shot learning 指的是 target data 非常少的迁移学习（One-shot learning : only a few examples in target domain）
+	zero shot : 训练阶段没有提供需要识别的新样本，模型通过学习其他相关类别的特征和描述以及类别之间的关系来推断新类别。
+（3）迁移学习的基本原理是什么？核心在于source domain和 target domain之间的相似性，包括数据相似性，任务相似性，模型相似性；知识迁移是迁移学习的核心，从而提高训练模型时的效率和性能。
+（4）有 source data label，有target data label：
+	fine-tune：限制output；限制参数；copy一部分层修改一部分层。
+	multitask learning：progressive learning
+	有  source data label，无target data label：
+	Domain-adversarial training，去除域信息
+	zero-shot：学习每一类的attributes，在embedding space 里面找与f(x)最接近的g(y)，从而得到y标签
+7、RNN（有计算）
+（1）RNN会有梯度消失和梯度爆炸的情况，分析原因
+	梯度消失：累乘导致激活函数导数的累乘，如果取tanh或者sigmoid函数作为激活函数，必然是一堆小数在做乘法，结果就是越乘越小，随着时间序列不断深入，小数的累乘会导致梯度越来越小甚至接近0.
+	现象源自过深的网络结构造成网络权重不稳定，本质上来讲是因为梯度反向传播中的连乘效应。
+	梯度爆炸：error surface可能变化非常陡峭的，可能前一步计算的梯度比较平坦，下一步到了陡峭处，导致梯度爆炸
+解决上述问题的技巧：
+使用LSTM 作为模型，可以解决gradient vanishing的问题，但是不能解决梯度爆炸。
+为什么LSTM 可以解决gradient vanishing的问题？
+因为 memory 和 输入是相加的关系而不是相乘的关系，除非forget gate 关闭，否则memory会一直影响input。
+怎样解决梯度爆炸问题？ 对梯度进行clip，如果梯度大于 x，则最大取 x。
+
+（2）lstm神经元和内部的结构，每个门控的作用	
+	lstm共有5个激活函数，其中3个是门控激活函数（函数相同），1个输入激活函数，1个cell细胞计算后要通过激活函数，激活函数常用sigmoid。
+	c' = g(z)*f(zi) + c * f(zf)
+	a = f(zo) * h(c')，a是最终输出
+	memory cell 的四个输入是四个标量，来源于同一个向量输入经过线性层变换。
+8、CNN
+（1）CNN计算题型：
+1、每一层都有一个额外的bias。
+2、pooling没有重合，2×2的pooling的话是参数减半。
+3、卷积层输出结果 (ori - length + 2*padding) / stride + 1
+（2）可解释性，可视化卷积核
+（3）resnet 残差神经网络的结构
+（4）残差神经网络用来解决什么问题
+（5）残差模块的原理和好处
+9、神经网络基本知识
+most important：back propagation
+（1）如何训练神经网络
+如何训练一个神经网络：
+1、Model initialization（模型初始化）
+2、forward propagate （前向传播）
+3、loss function （定义损失函数 比如= (desired -actual) ^2）
+4、differentiation（计算损失函数微分）
+5、Back-propagation（反向传播）
+6、weight-updata（更新参数）
+7、Iterate until convergence （迭代直到收敛）
+（2）权重概率初始化
+（3）不良的初始化会带来什么影响
+Weight Initialization 权重初始化
+1、如果全部初始化为0会怎么样？
+权重初始化全为0，那么隐藏层各个神经元的结果都是一样的，从而正向传播的结果是一样的，反向传播求得的梯度也是一样的，所有神经元都在计算同一特征，所以神经网络就失去了特征学习的能力。
+2、如果全部随机初始化为小值
+会大幅度丢失梯度信息
+（4）初始化为相同的数值有什么问题
+权重初始化全为相同值，那么隐藏层各个神经元的结果都是一样的，从而正向传播的结果是一样的，反向传播求得的梯度也是一样的，所有神经元都在计算同一特征，所以神经网络就失去了特征学习的能力。
+（5）随机梯度下降，adagrad，adam的原理是什么
+随机梯度下降：基于梯度下降，不过每次只选择一个样本进行梯度计算并用于参数更新
+adagrad（adaptive gradient algorithm）为每个参数维护一个独立的学习率，并根据该参数的历史梯度信息来调整学习率，对于梯度较大的参数，其学习率会逐渐减小；对于梯度较小的参数，学习率会相对较大。
+Adam（adaptive moment estimation）结合了adagrad 的优点，不仅维护了每个参数的自适应学习率，还引入了动量，考虑历史梯度信息。
+（6）动量是什么？引入了什么变量，引入原因是什么，公式是什么？
+动量可以帮助优化器冲出局部最小值，并更快地找到全局最小值
+引入了速度v 和动量因子μ
+速度v存储了之前所有梯度信息的累积，动量因子μ控制着之前梯度对当前速度的影响程度
+引入原因：传统梯度学习算法的收敛速度慢，容易陷入局部最小值，并且对噪声敏感
+有cos，linear等改变学习率的方法
+（7）正则化L1,L2，常用的正则化方法有什么（L1,L2公式）
+L1 = Σ| wi |， L2 = Σ|wi^2|
+常用正则化方法：添加L1,L2正则化项；Dropout；data augmentation
+10、神经网络基础
+（1）图像分类的定义是什么
+图像分类旨在根据图像的内容将其分配到预定义的类别中。使用神经网络进行图像分类，就是使用图片和标签的数据集，使用机器学习算法训练一个分类器。
+（2）如何提高图像分类的准确度
+数据方面，增加更多的数据，使用几何变换、添加噪声等对数据进行增强；
+模型方面，选择合适的模型架构，增加神经网络深度，使用在大规模数据集上训练的预训练模型，再根据目标任务进行微调，通过迁移学习提高模型性能
+训练方面：选择如SGD，Adam等合适的优化器；选择合适的学习率；使用L1,L2正则化技术防止过拟合；使用Drop-out防止过拟合。添加Batch Normalization层加速模型训练并提高稳定性，使用Early Stop 防止过拟合。
+（3）最近邻分类法，如何选择更好的超参数
+k最近邻法 k应该怎么取？最好的距离计算公式怎么取？
+方法1：选择在数据集上表现最好的k和距离公式
+方法2：将数据集划分为训练集和 测试集，选择在测试集上表现最好的k和距离公式
+方法3：将数据集分为训练集，验证集和测试集，在验证集上选超参数，在测试集上做测试。
+方法4：交叉验证，将数据集分成多个folds以及一个固定的test，在多个folds中逐个选做验证集，在test上测试
+实际上 k-近邻法在实际中不被使用:：因为1很慢，2 像素上的距离矩阵信息量不足（图改个色调就分不出来了）
+（4）梯度下降计算图怎么画？画出计算图后怎么进行前向传播和反向传播？wb梯度怎么计算？
+（5）常见的激活函数Relu，，Leaky rule，tanh，sigmoid之间的对比。（公式简单记一下）
+常见激活函数：
+sigmoid = 1/ (1+e^-x)
+缺点：1、有饱和区域，造成梯度消失 2、因为sigmoid输出总为正，所以更新时只能沿z-字型曲线下降，造成更新效率低。
+tanh = ( e^x - e^-x )/( e^x + e^-x )
+缺点：饱和时同样会造成梯度消失 
+ReLU = max(0, x)。ReLU is good default choise for most networks
+缺点：不是以0为均值的
+Leaky ReLU = max(0.1x, x)
+Maxout = max(w1x +b1, w2x +b2)
+缺点：造成神经元数目增加
+ELU = if x >= 0  then x else a(e^x - 1)
+缺点：需要计算指数
+
+Data Preprocessing 数据预处理
+Weight Initialization 权重初始化
+1、如果全部初始化为0会怎么样？
+权重初始化全为0，那么隐藏层各个神经元的结果都是一样的，从而正向传播的结果是一样的，反向传播求得的梯度也是一样的，所有神经元都在计算同一特征，所以神经网络就失去了特征学习的能力。
+2、如果全部随机初始化为小值
+会大幅度丢失梯度信息
+
+
