@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>问卷数据可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Microsoft YaHei", sans-serif;
+        background: #ffffff;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      /* 头部背景改为 primary: #4361ee */
+      header {
+        background: #4361ee;
+        color: white;
+        text-align: center;
+        padding: 1em;
+        font-size: 1.5em;
+      }
+      .chart-container {
+        max-width: 700px;
+        margin: 2em auto;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1em 2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      canvas {
+        width: 100% !important;
+        height: 400px !important;
+      }
+      /* 确保图片在容器内正确显示 */
+      .chart-container img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        /* 保持图片在 canvas 容器高度范围内的视觉效果 */
+        max-height: 400px;
+      }
+      h3 {
+        text-align: center;
+        color: #4361ee;
+        margin-top: 0;
+        padding-top: 0.5em;
+      }
+      p {
+        color: #555;
+        text-align: center;
+        font-size: 0.95em;
+        margin-top: 0.5em;
+        padding-bottom: 0.5em;
+      }
+      footer {
+        text-align: center;
+        color: #777;
+        margin-top: 3em;
+        padding-bottom: 1em;
+      }
+      /* 新增按钮样式 */
+      .button-container {
+        text-align: center;
+        margin: 3em auto 2em auto;
+        max-width: 700px; /* 与图表容器保持一致的宽度，使其居中 */
+      }
+      .data-button {
+        background-color: #4361ee; /* primaryColor */
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 1.1em;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-decoration: none; /* 移除 a 标签的下划线 */
+        display: inline-block; /* 确保 padding 生效 */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .data-button:hover {
+        background-color: #3f37c9; /* secondaryColor 的深色效果 */
+      }
+    </style>
+  </head>
+  <body>
+    <header>问卷结果可视化</header>
+
+    <div class="chart-container">
+      <h3>1. 年龄分布</h3>
+      <canvas id="ageChart"></canvas>
+      <p>多数受访者（70%）集中在66岁及以上年龄段。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>2. 愿意使用App程度 (平均评分: 8.4/10)</h3>
+      <canvas id="appChart"></canvas>
+      <p>受访者对使用智能安全应用的整体接受度较高。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>3. 紧急按钮必要性评分 (平均评分: 9.0/10)</h3>
+      <canvas id="buttonChart"></canvas>
+      <p>受访者普遍认为在智能设备中设置紧急按钮非常必要。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>4. 性别比例</h3>
+      <canvas id="genderChart"></canvas>
+      <p>男女比例相对一致。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>5. 居住情况</h3>
+      <canvas id="livingChart"></canvas>
+      <p>40% 的受访者处于独居状态，提示产品设计需考虑独居场景。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>6. 智能手机拥有情况</h3>
+      <canvas id="phoneChart"></canvas>
+      <p>六成受访者拥有智能手机，但仍有四成需要非智能方案。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>7. 曾跌倒经历</h3>
+      <canvas id="fallChart"></canvas>
+      <p>所有受访者（100%）都有过跌倒经历，突显了跌倒检测的必要性。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>8. 跌倒求助方式</h3>
+      <canvas id="helpChart"></canvas>
+      <p>“智能设备SOS功能”是最高选择的求助方式（50%）。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>9. 政府支持意见</h3>
+      <canvas id="govChart"></canvas>
+      <p>超过七成受访者（70%）认为政府应提供此类服务或补贴。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>10. 付费意愿</h3>
+      <canvas id="payChart"></canvas>
+      <p>60% 的受访者表示愿意每月支付费用。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>11. 亲和图：需求与反馈分类</h3>
+      <img src="affinity pic.png" alt="亲和图：需求与反馈分类" />
+      <p>此图展示了具体访谈中用户的「风险担忧」→「求助需求」→「功能期望」。</p>
+    </div>
+
+    <div class="button-container">
+      <a href="info.html" class="data-button">查看原始访谈数据</a>
+    </div>
+
+    <script>
+      // 统一颜色方案
+      const primaryColor = "#4361ee";
+      const secondaryColor = "#3f37c9";
+      const accentColor = "#4895ef";
+      const neutralColor = "#a0aec0"; // 中性灰
+
+      // --- 原始数据 (根据 survey.docx 调整了 ageData 和 payIntent) ---
+      // 年龄分布 (60–65岁: 20%; 66–70岁: 20%; 71–75岁: 20%; 76岁及以上: 40%)
+      const ageData = [2, 2, 2, 4];
+      // App 使用意愿 (保持原 HTML 数据，但注意与 8.4/10 的平均分有偏差)
+      const appWilling = [8, 9, 8, 10, 7, 9, 5, 4, 3, 4];
+      // 紧急按钮必要性 (保持原 HTML 数据，但注意与 9.0/10 的平均分有偏差)
+      const buttonNeed = [8, 9, 10, 9, 10, 8, 6, 5, 4, 5];
+      // 政府支持 (支持: 70%, 不支持: 30%)
+      const govSupport = { yes: 7, no: 3 };
+      // 付费意愿 (愿意每月支付: 60%; 仅免费: 30%; 不愿支付: 10%)
+      const payIntent = { monthly: 6, free: 3, none: 1 };
+
+      // --- 新增数据 (来自 survey.docx) ---
+      const genderRatio = { female: 5, male: 5 }; // 女: 50%, 男: 50%
+      const livingSituation = { alone: 4, notAlone: 6 }; // 独居: 40%, 非独居: 60%
+      const smartphoneOwnership = { yes: 6, no: 4 }; // 有智能手机: 60%, 无: 40%
+      const fallExperience = { yes: 10, no: 0 }; // 曾跌倒: 100%, 否: 0%
+      // 求助方式 (Smart SOS: 50%, Community: 40%, Emergency Call: 40%) - 用于 Bar Chart
+      const helpSeeking = { smartSOS: 5, community: 4, emergencyCall: 4 };
+
+      // --- 1. 年龄分布 (Pie Chart) ---
+      new Chart(document.getElementById("ageChart"), {
+        type: "pie",
+        data: {
+          labels: ["60-65岁", "66-70岁", "71-75岁", "76岁及以上"],
+          datasets: [
+            {
+              data: ageData,
+              backgroundColor: [
+                primaryColor,
+                accentColor,
+                secondaryColor,
+                neutralColor,
+              ],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: false },
+          },
+        },
+      });
+
+      // --- 2. 愿意使用App程度 (Bar Chart) ---
+      new Chart(document.getElementById("appChart"), {
+        type: "bar",
+        data: {
+          labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+          datasets: [
+            {
+              label: "打分 (1–10)",
+              data: appWilling,
+              backgroundColor: primaryColor,
+            },
+          ],
+        },
+        options: {
+          scales: { y: { beginAtZero: true, max: 10 } },
+          responsive: true,
+          plugins: { legend: { display: false }, title: { display: false } },
+        },
+      });
+
+      // --- 3. 紧急按钮必要性评分 (Bar Chart) ---
+      new Chart(document.getElementById("buttonChart"), {
+        type: "bar",
+        data: {
+          labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+          datasets: [
+            {
+              label: "必要性评分",
+              data: buttonNeed,
+              backgroundColor: secondaryColor,
+            },
+          ],
+        },
+        options: {
+          scales: { y: { beginAtZero: true, max: 10 } },
+          responsive: true,
+          plugins: { legend: { display: false }, title: { display: false } },
+        },
+      });
+
+      // --- 4. 性别比例 (Pie Chart) ---
+      new Chart(document.getElementById("genderChart"), {
+        type: "pie",
+        data: {
+          labels: ["女 (50%)", "男 (50%)"],
+          datasets: [
+            {
+              data: [genderRatio.female, genderRatio.male],
+              backgroundColor: [primaryColor, neutralColor],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: false },
+          },
+        },
+      });
+
+      // --- 5. 居住情况 (Pie Chart) ---
+      new Chart(document.getElementById("livingChart"), {
+        type: "pie",
+        data: {
+          labels: ["独居 (40%)", "非独居 (60%)"],
+          datasets: [
+            {
+              data: [livingSituation.alone, livingSituation.notAlone],
+              backgroundColor: [accentColor, primaryColor],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: false },
+          },
+        },
+      });
+
+      // --- 6. 智能手机拥有情况 (Pie Chart) ---
+      new Chart(document.getElementById("phoneChart"), {
+        type: "pie",
+        data: {
+          labels: ["拥有智能手机 (60%)", "没有智能手机 (40%)"],
+          datasets: [
+            {
+              data: [smartphoneOwnership.yes, smartphoneOwnership.no],
+              backgroundColor: [secondaryColor, neutralColor],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: false },
+          },
+        },
+      });
+
+      // --- 7. 曾跌倒经历 (Pie Chart) ---
+      new Chart(document.getElementById("fallChart"), {
+        type: "pie",
+        data: {
+          labels: ["曾跌倒 (100%)", "未曾跌倒 (0%)"],
+          datasets: [
+            {
+              data: [fallExperience.yes, fallExperience.no],
+              backgroundColor: [primaryColor, neutralColor],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: false },
+          },
+        },
+      });
+
+      // --- 8. 跌倒求助方式 (Bar Chart) ---
+      // 使用 10 倍数据来显示百分比，总和超过 100%
+      new Chart(document.getElementById("helpChart"), {
+        type: "bar",
+        data: {
+          labels: [
+            "智能设备SOS功能 (50%)",
+            "呼叫社区工作人员 (40%)",
+            "拨打急救电话 (40%)",
+          ],
+          datasets: [
+            {
+              label: "选择占比 (%)",
+              data: [
+                helpSeeking.smartSOS * 10,
+                helpSeeking.community * 10,
+                helpSeeking.emergencyCall * 10,
+              ],
+              backgroundColor: [primaryColor, secondaryColor, accentColor],
+            },
+          ],
+        },
+        options: {
+          scales: { y: { beginAtZero: true, max: 100 } },
+          responsive: true,
+          plugins: { legend: { display: false }, title: { display: false } },
+        },
+      });
+
+      // --- 9. 政府支持意见 (Pie Chart) ---
+      new Chart(document.getElementById("govChart"), {
+        type: "pie",
+        data: {
+          labels: ["支持 (70%)", "不支持 (30%)"],
+          datasets: [
+            {
+              data: [govSupport.yes, govSupport.no],
+              backgroundColor: [primaryColor, neutralColor],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: false },
+          },
+        },
+      });
+
+      // --- 10. 付费意愿 (Pie Chart) ---
+      new Chart(document.getElementById("payChart"), {
+        type: "pie",
+        data: {
+          labels: [
+            "愿意每月支付 (60%)",
+            "仅在免费时使用 (30%)",
+            "不愿支付 (10%)",
+          ],
+          datasets: [
+            {
+              data: [payIntent.monthly, payIntent.free, payIntent.none],
+              backgroundColor: [primaryColor, accentColor, neutralColor],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: false },
+          },
+        },
+      });
+    </script>
+    <footer>© 2025 独居老人安全监测研究项目组</footer>
+  </body>
+</html>

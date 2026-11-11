@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>问卷数据可视化</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Microsoft YaHei", sans-serif;
+        background: #ffffff;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      /* 头部背景改为 primary: #4361ee */
+      header {
+        background: #4361ee;
+        color: white;
+        text-align: center;
+        padding: 1em;
+        font-size: 1.5em;
+      }
+      .chart-container {
+        max-width: 700px;
+        margin: 2em auto;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 1em 2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      canvas {
+        width: 100% !important;
+        height: 400px !important;
+      }
+      p {
+        color: #555;
+        text-align: center;
+        font-size: 0.95em;
+        margin-top: 0.5em;
+      }
+    </style>
+  </head>
+  <body>
+    <header>问卷结果可视化</header>
+
+    <div class="chart-container">
+      <h3>1. 年龄分布</h3>
+      <canvas id="ageChart"></canvas>
+      <p>多数受访者集中在66-75岁区间。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>2. 愿意使用App程度</h3>
+      <canvas id="appChart"></canvas>
+      <p>约六成受访者表示愿意使用智能安全应用。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>3. 紧急按钮必要性评分</h3>
+      <canvas id="buttonChart"></canvas>
+      <p>大多数人认为设置紧急按钮非常必要。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>4. 政府支持意见</h3>
+      <canvas id="govChart"></canvas>
+      <p>超过七成受访者认为政府应提供此类服务。</p>
+    </div>
+
+    <div class="chart-container">
+      <h3>5. 付费意愿</h3>
+      <canvas id="payChart"></canvas>
+      <p>部分人愿意支付适当费用以保障安全。</p>
+    </div>
+
+    <script>
+      const ageData = [2, 3, 3, 2];
+      const appWilling = [8, 9, 8, 10, 7, 9, 5, 4, 3, 4];
+      const buttonNeed = [8, 9, 10, 9, 10, 8, 6, 5, 4, 5];
+      const govSupport = { yes: 7, no: 3 };
+      const payIntent = { monthly: 5, free: 3, none: 2 };
+
+      // 统一颜色方案
+      const primaryColor = "#4361ee";
+      const secondaryColor = "#3f37c9";
+      const accentColor = "#4895ef";
+      const neutralColor = "#a0aec0"; // 中性灰
+
+      new Chart(document.getElementById("ageChart"), {
+        type: "pie",
+        data: {
+          labels: ["60-65岁", "66-70岁", "71-75岁", "76岁及以上"],
+          // 渐变色使用 primary 和 accent
+          datasets: [
+            {
+              data: ageData,
+              backgroundColor: [
+                primaryColor,
+                accentColor,
+                secondaryColor,
+                neutralColor,
+              ],
+            },
+          ],
+        },
+      });
+
+      new Chart(document.getElementById("appChart"), {
+        type: "bar",
+        data: {
+          labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+          // 使用 primary color
+          datasets: [
+            {
+              label: "打分 (1–10)",
+              data: appWilling,
+              backgroundColor: primaryColor,
+            },
+          ],
+        },
+        options: { scales: { y: { beginAtZero: true, max: 10 } } },
+      });
+
+      new Chart(document.getElementById("buttonChart"), {
+        type: "bar",
+        data: {
+          labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+          // 使用 secondary color
+          datasets: [
+            {
+              label: "必要性评分",
+              data: buttonNeed,
+              backgroundColor: secondaryColor,
+            },
+          ],
+        },
+        options: { scales: { y: { beginAtZero: true, max: 10 } } },
+      });
+
+      new Chart(document.getElementById("govChart"), {
+        type: "pie",
+        data: {
+          labels: ["支持", "不支持"],
+          // 支持使用 primary，不支持使用中性色
+          datasets: [
+            {
+              data: [govSupport.yes, govSupport.no],
+              backgroundColor: [primaryColor, neutralColor],
+            },
+          ],
+        },
+      });
+
+      new Chart(document.getElementById("payChart"), {
+        type: "pie",
+        data: {
+          labels: ["愿意每月支付", "仅在免费时使用", "不愿支付"],
+          // 愿意支付使用 primary，其次是 accent，不愿支付使用中性色
+          datasets: [
+            {
+              data: [payIntent.monthly, payIntent.free, payIntent.none],
+              backgroundColor: [primaryColor, accentColor, neutralColor],
+            },
+          ],
+        },
+      });
+    </script>
+  </body>
+</html>

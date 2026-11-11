@@ -1,0 +1,1 @@
+[x, y] = strimage(1)

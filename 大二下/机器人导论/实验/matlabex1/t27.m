@@ -1,0 +1,11 @@
+p = [2; 3; 4; 1];
+pi = 3.14159;
+T1 = trotx(pi/2);
+T0 = trotx(0);
+T2 = T0*T1;
+p2 = T1*p;
+axis([-6,6,-6,6,-6,6]);
+trplot(T0,'frame','A','color','r');
+hold on;
+% tranimate(p,'frame','B','color','r');
+tranimate(T0,T2,'frame','B','color','b' );

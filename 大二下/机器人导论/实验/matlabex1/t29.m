@@ -1,0 +1,13 @@
+pi = 3.1415;
+p = [7; 3; 1; 1];
+T1 = trotz(pi / 2);
+T2 = transl(4,-3, 7);
+T3 = troty(pi / 2);
+T4 = T3*T2*T1;
+p2 = T4*p;
+T0 = trotx(0);
+T5 = T4*T0;
+trplot(T0,'frame','A','color','r');
+axis([-10,10,-10,10,-10,10]);
+hold on;
+tranimate(T0,T5,'frame','B','color','b');
