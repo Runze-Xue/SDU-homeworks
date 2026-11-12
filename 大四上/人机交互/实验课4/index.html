@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>独居老人安全检测App研究项目</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4361ee",
+              secondary: "#3f37c9",
+              accent: "#4895ef",
+              light: "#f8f9fa",
+              dark: "#212529",
+            },
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .content-auto {
+          content-visibility: auto;
+        }
+        .section-card {
+          @apply bg-white rounded-xl shadow-md p-6 md:p-8 mb-10 transition-all duration-300 hover:shadow-lg;
+        }
+        .question-card {
+          @apply bg-white rounded-xl shadow-md p-6 mb-6 transition-all duration-300 hover:shadow-lg;
+        }
+        .btn-primary {
+          @apply bg-primary hover:bg-secondary text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 text-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+        }
+        .nav-link {
+          @apply text-white hover:text-light/80 px-3 py-2 rounded-md transition-colors duration-200 text-lg font-medium;
+        }
+        .scale-option {
+          @apply w-10 h-10 rounded-full border-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-primary/10;
+        }
+        .scale-option.selected {
+          @apply bg-primary text-white border-primary;
+        }
+        .radio-option,
+        .checkbox-option {
+          @apply flex items-center mb-3 cursor-pointer;
+        }
+        .radio-option input,
+        .checkbox-option input {
+          @apply w-6 h-6 mr-3 accent-primary;
+        }
+        .form-label {
+          @apply text-lg font-medium mb-3 block;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans text-dark">
+    <!-- 顶部导航栏 -->
+    <header class="bg-primary text-white shadow-md sticky top-0 z-50">
+      <div class="container mx-auto px-4">
+        <nav
+          class="flex flex-col md:flex-row items-center justify-between py-4"
+        >
+          <h1 class="text-xl md:text-2xl font-bold mb-4 md:mb-0">
+            独居老人安全检测App研究项目
+          </h1>
+          <div class="flex flex-wrap justify-center gap-2">
+            <a href="#home" class="nav-link"
+              ><i class="fa fa-home mr-1"></i>首页</a
+            >
+            <a href="#team" class="nav-link"
+              ><i class="fa fa-users mr-1"></i>团队介绍</a
+            >
+            <a href="#proposal" class="nav-link"
+              ><i class="fa fa-file-text mr-1"></i>项目提案</a
+            >
+            <a href="#data-plan" class="nav-link"
+              ><i class="fa fa-database mr-1"></i>数据计划</a
+            >
+            <a href="#survey" class="nav-link"
+              ><i class="fa fa-list-alt mr-1"></i>调查问卷</a
+            >
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- 主要内容区 -->
+    <main class="container mx-auto px-4 py-8 max-w-5xl">
+      <!-- 首页介绍 -->
+      <section id="home" class="section-card text-center">
+        <div class="mb-6">
+          <i class="fa fa-heartbeat text-6xl text-primary"></i>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 text-primary">
+          独居老人安全检测App研究项目
+        </h2>
+        <p class="text-lg leading-relaxed mb-6">
+          本项目旨在通过调研独居老人的生活现状与安全需求，设计一款贴合老年群体使用习惯的安全检测App，
+          为独居老人提供及时的安全保障与紧急求助渠道，缓解家庭照护压力，提升老年生活质量。
+        </p>
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+          <a href="#survey" class="btn-primary"
+            ><i class="fa fa-list-alt mr-2"></i>参与问卷调查</a
+          >
+          <a href="#data-plan" class="btn-primary bg-accent"
+            ><i class="fa fa-info-circle mr-2"></i>了解研究计划</a
+          >
+        </div>
+      </section>
+
+      <!-- 团队介绍 -->
+      <section id="team" class="section-card">
+        <h2 class="text-2xl font-bold mb-6 text-primary flex items-center">
+          <i class="fa fa-users mr-3 text-xl"></i>团队介绍
+        </h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-xl font-semibold mb-3">研究团队组成</h3>
+            <p class="text-lg leading-relaxed">
+              本团队由4名具备扎实的理论基础与实践经验的人工智能学生组成，我们
+              致力于通过技术创新解决独居老人安全问题。
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <div class="bg-light p-5 rounded-lg border border-gray-200">
+              <h4 class="font-semibold text-lg mb-2">核心成员及分工</h4>
+              <ul class="list-disc pl-5 space-y-2 text-lg">
+                <li>
+                  项目负责人：陈翰霆（人工智能天才，负责研究设计与需求分析）
+                </li>
+                <li>产品设计：丁嘉晖（设计大师，负责访谈与数据收集的设计）</li>
+                <li>技术开发：吴振左（技术大牛，负责问卷开发设计）</li>
+                <li>
+                  产品体验：薛润泽（负责扮演用户角色，体验产品并反馈问题）
+                </li>
+              </ul>
+            </div>
+
+            <div class="bg-light p-5 rounded-lg border border-gray-200">
+              <h4 class="font-semibold text-lg mb-2">研究背景</h4>
+              <p class="text-lg leading-relaxed">
+                团队关注老龄化社会问题
+                深刻了解独居老人在安全保障方面的痛点。本项目基于前期调研结果，
+                聚焦技术赋能老年安全领域，力求打造实用性与易用性兼具的解决方案。
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">联系方式</h3>
+            <p class="text-lg">
+              <i class="fa fa-envelope mr-2 text-primary"></i
+              >项目邮箱：[email removed]<br />
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 项目提案 -->
+      <section id="proposal" class="section-card">
+        <h2 class="text-2xl font-bold mb-6 text-primary flex items-center">
+          <i class="fa fa-file-text mr-3 text-xl"></i>项目提案
+        </h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-xl font-semibold mb-3">项目背景与意义</h3>
+            <p class="text-lg leading-relaxed">
+              据国家统计局数据，我国60岁以上独居老人已超1.2亿，其中80%面临居家安全风险（如跌倒、突发疾病无人知晓）。
+              传统照护模式难以覆盖所有独居老人，而现有智能设备多存在操作复杂、功能冗余等问题，老年用户接受度低。
+              因此，研发一款操作简单、功能精准的安全检测App具有重要的社会价值。
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">研究目标</h3>
+            <ul class="list-disc pl-5 space-y-2 text-lg">
+              <li>明确独居老人的核心安全需求与技术接受度</li>
+              <li>设计符合老年用户习惯的App功能与交互界面</li>
+              <li>开发具备跌倒检测、紧急求助、健康提醒等核心功能的原型</li>
+              <li>通过用户测试优化产品，提升老年用户使用体验</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">项目创新点</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div class="bg-light p-4 rounded-lg border border-gray-200">
+                <p class="text-lg">
+                  <i class="fa fa-lightbulb-o text-primary mr-2"></i
+                  >极简操作设计，支持语音交互与大字体显示
+                </p>
+              </div>
+              <div class="bg-light p-4 rounded-lg border border-gray-200">
+                <p class="text-lg">
+                  <i class="fa fa-lightbulb-o text-primary mr-2"></i
+                  >多维度安全检测，结合行为习惯与健康数据
+                </p>
+              </div>
+              <div class="bg-light p-4 rounded-lg border border-gray-200">
+                <p class="text-lg">
+                  <i class="fa fa-lightbulb-o text-primary mr-2"></i
+                  >分级预警机制，避免过度打扰与误报
+                </p>
+              </div>
+              <div class="bg-light p-4 rounded-lg border border-gray-200">
+                <p class="text-lg">
+                  <i class="fa fa-lightbulb-o text-primary mr-2"></i
+                  >联动社区服务，构建"技术+人工"双重保障
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-3">预期成果</h3>
+            <p class="text-lg leading-relaxed">
+              项目将形成《独居老人安全需求调研报告》、App功能原型、用户操作手册及社区推广方案，
+              为后续产品开发与落地提供依据，最终助力提升独居老人的居家安全水平。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 数据收集计划 -->
+      <section id="data-plan" class="section-card">
+        <h2 class="text-2xl font-bold mb-6 text-primary flex items-center">
+          <i class="fa fa-database mr-3 text-xl"></i>数据收集计划
+        </h2>
+        <div class="space-y-8">
+          <!-- 访谈计划 -->
+          <div>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fa fa-comments text-primary mr-2"></i>访谈计划
+            </h3>
+            <div class="bg-light p-5 rounded-lg border border-gray-200">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-lg mb-2">访谈对象</h4>
+                  <p class="text-lg">
+                    选取20名60岁以上独居老人（覆盖不同年龄、技术使用能力），
+                    及5名社区老年服务工作者、10名老人家属。
+                  </p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-lg mb-2">访谈流程</h4>
+                  <p class="text-lg">
+                    1. 引言说明（介绍研究目的与保密承诺）<br />
+                    2. 热身问题（日常生活、技术使用习惯）<br />
+                    3. 主体问题（安全风险、需求痛点、技术接受度）<br />
+                    4. 总结与感谢（约30-40分钟/人）
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <h4 class="font-semibold text-lg mb-2">访谈内容要点</h4>
+                <ul class="list-disc pl-5 space-y-1 text-lg">
+                  <li>日常生活作息与安全隐患</li>
+                  <li>过往意外经历及处理方式</li>
+                  <li>智能手机/可穿戴设备使用经验</li>
+                  <li>对安全检测技术的需求与顾虑</li>
+                  <li>期望的功能与服务形式</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问卷计划 -->
+          <div>
+            <h3 class="text-xl font-semibold mb-4 flex items-center">
+              <i class="fa fa-list-alt text-primary mr-2"></i>问卷计划
+            </h3>
+            <div class="bg-light p-5 rounded-lg border border-gray-200">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-lg mb-2">问卷对象与规模</h4>
+                  <p class="text-lg">
+                    面向全国60岁以上独居老人，计划收集有效问卷500份，
+                    覆盖不同地域（城市/农村）、年龄层次及健康状况。
+                  </p>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-lg mb-2">发放与回收方式</h4>
+                  <p class="text-lg">
+                    1. 线上：通过社区老年群、养老平台发放<br />
+                    2. 线下：社区服务中心协助纸质问卷填写<br />
+                    3. 回收周期：2023年X月-X月（共4周）
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <h4 class="font-semibold text-lg mb-2">问卷内容框架</h4>
+                <ul class="list-disc pl-5 space-y-1 text-lg">
+                  <li>基本信息（年龄、性别、独居情况）</li>
+                  <li>生活与安全习惯（意外经历、求助方式）</li>
+                  <li>技术使用能力（智能手机、可穿戴设备使用情况）</li>
+                  <li>需求与期望（功能偏好、提醒方式、付费意愿）</li>
+                </ul>
+                <div class="mt-3">
+                  <a
+                    href="#survey"
+                    class="text-primary hover:text-secondary font-medium text-lg"
+                  >
+                    <i class="fa fa-arrow-right mr-1"></i>查看问卷详情并参与
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 数据处理方式 -->
+          <div>
+            <h3 class="text-xl font-semibold mb-3">数据处理与应用</h3>
+            <p class="text-lg leading-relaxed">
+              访谈数据采用主题分析法提炼核心需求；问卷数据通过SPSS进行统计分析，
+              明确不同群体的需求差异。所有数据将严格保密，仅用于研究目的，
+              最终形成《独居老人安全需求分析报告》，为App功能设计提供依据。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 调查问卷（原问卷内容） -->
+      <section id="survey" class="section-card">
+        <h2 class="text-2xl font-bold mb-6 text-primary flex items-center">
+          <i class="fa fa-list-alt mr-3 text-xl"></i
+          >独居老人安全检测App用户调研问卷
+        </h2>
+
+        <!-- 调查说明 -->
+        <div class="bg-light p-5 rounded-lg border border-gray-200 mb-6">
+          <h3 class="text-xl font-semibold mb-3">调查说明</h3>
+          <p class="text-lg leading-relaxed">
+            您好！以下问卷旨在了解独居老人的生活情况、安全需求及对技术的接受度。问卷大约需要5-10分钟，
+            您的回答将被严格保密，仅用于学术研究。感谢您的参与！
+          </p>
+        </div>
+
+        <!-- 问卷表单 -->
+        <form id="surveyForm" class="space-y-8">
+          <!-- 问题1 -->
+          <div class="question-card">
+            <label class="form-label">1. 您的年龄范围是？</label>
+            <div class="space-y-2">
+              <div class="radio-option">
+                <input type="radio" id="age1" name="age" value="A" />
+                <label for="age1" class="text-lg">A. 60-65岁</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="age2" name="age" value="B" />
+                <label for="age2" class="text-lg">B. 66-70岁</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="age3" name="age" value="C" />
+                <label for="age3" class="text-lg">C. 71-75岁</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="age4" name="age" value="D" />
+                <label for="age4" class="text-lg">D. 76岁及以上</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题2 -->
+          <div class="question-card">
+            <label class="form-label">2. 您的性别是？</label>
+            <div class="space-y-2">
+              <div class="radio-option">
+                <input type="radio" id="gender1" name="gender" value="A" />
+                <label for="gender1" class="text-lg">A. 男</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="gender2" name="gender" value="B" />
+                <label for="gender2" class="text-lg">B. 女</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题3 -->
+          <div class="question-card">
+            <label class="form-label">3. 您目前是否独居？</label>
+            <div class="space-y-2">
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="liveAlone1"
+                  name="liveAlone"
+                  value="A"
+                />
+                <label for="liveAlone1" class="text-lg">A. 是</label>
+              </div>
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="liveAlone2"
+                  name="liveAlone"
+                  value="B"
+                />
+                <label for="liveAlone2" class="text-lg">B. 否</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题4 -->
+          <div class="question-card">
+            <label class="form-label">4. 您是否拥有智能手机？</label>
+            <div class="space-y-2">
+              <div class="radio-option">
+                <input type="radio" id="hasPhone1" name="hasPhone" value="A" />
+                <label for="hasPhone1" class="text-lg">A. 是</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="hasPhone2" name="hasPhone" value="B" />
+                <label for="hasPhone2" class="text-lg">B. 否</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题5 -->
+          <div class="question-card">
+            <label class="form-label"
+              >5. 您每天平均与家人/朋友联系的频率？（1 = 几乎从不，10 =
+              每天多次）</label
+            >
+            <div
+              class="flex flex-wrap gap-2 justify-center mt-4"
+              id="contactFrequency"
+            >
+              <div class="scale-option" data-value="1">1</div>
+              <div class="scale-option" data-value="2">2</div>
+              <div class="scale-option" data-value="3">3</div>
+              <div class="scale-option" data-value="4">4</div>
+              <div class="scale-option" data-value="5">5</div>
+              <div class="scale-option" data-value="6">6</div>
+              <div class="scale-option" data-value="7">7</div>
+              <div class="scale-option" data-value="8">8</div>
+              <div class="scale-option" data-value="9">9</div>
+              <div class="scale-option" data-value="10">10</div>
+            </div>
+            <input
+              type="hidden"
+              id="contactFrequencyValue"
+              name="contactFrequency"
+            />
+          </div>
+
+          <!-- 问题6 -->
+          <div class="question-card">
+            <label class="form-label"
+              >6. 您是否曾经在家中发生过跌倒或意外？</label
+            >
+            <div class="space-y-2">
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="hadAccident1"
+                  name="hadAccident"
+                  value="A"
+                />
+                <label for="hadAccident1" class="text-lg">A. 是</label>
+              </div>
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="hadAccident2"
+                  name="hadAccident"
+                  value="B"
+                />
+                <label for="hadAccident2" class="text-lg">B. 否</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题7 -->
+          <div class="question-card">
+            <label class="form-label"
+              >7. 如果遇到紧急情况，您通常通过什么方式寻求帮助？（多选）</label
+            >
+            <div class="space-y-2">
+              <div class="checkbox-option">
+                <input type="checkbox" id="help1" name="helpMethod" value="A" />
+                <label for="help1" class="text-lg">A. 电话联系家人或朋友</label>
+              </div>
+              <div class="checkbox-option">
+                <input type="checkbox" id="help2" name="helpMethod" value="B" />
+                <label for="help2" class="text-lg">B. 寻求邻居帮助</label>
+              </div>
+              <div class="checkbox-option">
+                <input type="checkbox" id="help3" name="helpMethod" value="C" />
+                <label for="help3" class="text-lg">C. 呼叫社区工作人员</label>
+              </div>
+              <div class="checkbox-option">
+                <input type="checkbox" id="help4" name="helpMethod" value="D" />
+                <label for="help4" class="text-lg"
+                  >D. 拨打急救电话（120）或报警（110）</label
+                >
+              </div>
+              <div class="checkbox-option">
+                <input type="checkbox" id="help5" name="helpMethod" value="E" />
+                <label for="help5" class="text-lg"
+                  >E. 使用智能设备（如智能手表/手机应用的SOS功能）</label
+                >
+              </div>
+              <div class="checkbox-option">
+                <input type="checkbox" id="help6" name="helpMethod" value="F" />
+                <label for="help6" class="text-lg">F. 其他（请说明）</label>
+              </div>
+              <div id="otherHelpContainer" class="mt-2 hidden">
+                <input
+                  type="text"
+                  name="otherHelp"
+                  placeholder="请说明其他求助方式"
+                  class="w-full p-3 border border-gray-300 rounded-lg text-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题8 -->
+          <div class="question-card">
+            <label class="form-label"
+              >8. 您是否愿意使用智能手机应用来保障您的安全？（1 = 不愿意，10 =
+              愿意）</label
+            >
+            <div
+              class="flex flex-wrap gap-2 justify-center mt-4"
+              id="appWillingness"
+            >
+              <div class="scale-option" data-value="1">1</div>
+              <div class="scale-option" data-value="2">2</div>
+              <div class="scale-option" data-value="3">3</div>
+              <div class="scale-option" data-value="4">4</div>
+              <div class="scale-option" data-value="5">5</div>
+              <div class="scale-option" data-value="6">6</div>
+              <div class="scale-option" data-value="7">7</div>
+              <div class="scale-option" data-value="8">8</div>
+              <div class="scale-option" data-value="9">9</div>
+              <div class="scale-option" data-value="10">10</div>
+            </div>
+            <input
+              type="hidden"
+              id="appWillingnessValue"
+              name="appWillingness"
+            />
+          </div>
+
+          <!-- 问题9 -->
+          <div class="question-card">
+            <label class="form-label"
+              >9. 您平时是否使用可穿戴设备（如智能手表/手环）？（1 =
+              几乎从不，10 = 时刻穿戴）</label
+            >
+            <div
+              class="flex flex-wrap gap-2 justify-center mt-4"
+              id="wearableUsage"
+            >
+              <div class="scale-option" data-value="1">1</div>
+              <div class="scale-option" data-value="2">2</div>
+              <div class="scale-option" data-value="3">3</div>
+              <div class="scale-option" data-value="4">4</div>
+              <div class="scale-option" data-value="5">5</div>
+              <div class="scale-option" data-value="6">6</div>
+              <div class="scale-option" data-value="7">7</div>
+              <div class="scale-option" data-value="8">8</div>
+              <div class="scale-option" data-value="9">9</div>
+              <div class="scale-option" data-value="10">10</div>
+            </div>
+            <input type="hidden" id="wearableUsageValue" name="wearableUsage" />
+          </div>
+
+          <!-- 问题10 -->
+          <div class="question-card">
+            <label class="form-label"
+              >10. 您认为在手机App中设置“紧急呼叫”按钮是否必要？（1 =
+              没有必要，10 = 非常有必要）</label
+            >
+            <div
+              class="flex flex-wrap gap-2 justify-center mt-4"
+              id="emergencyButton"
+            >
+              <div class="scale-option" data-value="1">1</div>
+              <div class="scale-option" data-value="2">2</div>
+              <div class="scale-option" data-value="3">3</div>
+              <div class="scale-option" data-value="4">4</div>
+              <div class="scale-option" data-value="5">5</div>
+              <div class="scale-option" data-value="6">6</div>
+              <div class="scale-option" data-value="7">7</div>
+              <div class="scale-option" data-value="8">8</div>
+              <div class="scale-option" data-value="9">9</div>
+              <div class="scale-option" data-value="10">10</div>
+            </div>
+            <input
+              type="hidden"
+              id="emergencyButtonValue"
+              name="emergencyButton"
+            />
+          </div>
+
+          <!-- 问题11 -->
+          <div class="question-card">
+            <label class="form-label"
+              >11. 您希望设备在检测到危险时，首先通知谁？(多选）</label
+            >
+            <div class="space-y-2">
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="notify1"
+                  name="notifyWho"
+                  value="A"
+                />
+                <label for="notify1" class="text-lg">A. 家人或朋友</label>
+              </div>
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="notify2"
+                  name="notifyWho"
+                  value="B"
+                />
+                <label for="notify2" class="text-lg">B. 社区工作人员</label>
+              </div>
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="notify3"
+                  name="notifyWho"
+                  value="C"
+                />
+                <label for="notify3" class="text-lg">C. 邻居</label>
+              </div>
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="notify4"
+                  name="notifyWho"
+                  value="D"
+                />
+                <label for="notify4" class="text-lg">D. 医院急救中心</label>
+              </div>
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="notify5"
+                  name="notifyWho"
+                  value="E"
+                />
+                <label for="notify5" class="text-lg">E. 警察</label>
+              </div>
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="notify6"
+                  name="notifyWho"
+                  value="F"
+                />
+                <label for="notify6" class="text-lg">F. 其他（请说明）</label>
+              </div>
+              <div id="otherNotifyContainer" class="mt-2 hidden">
+                <input
+                  type="text"
+                  name="otherNotify"
+                  placeholder="请说明其他通知对象"
+                  class="w-full p-3 border border-gray-300 rounded-lg text-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题12 -->
+          <div class="question-card">
+            <label class="form-label">12. 您希望的提醒方式是？（多选）</label>
+            <div class="space-y-2">
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="reminder1"
+                  name="reminderMethod"
+                  value="A"
+                />
+                <label for="reminder1" class="text-lg">A. 声音提醒</label>
+              </div>
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="reminder2"
+                  name="reminderMethod"
+                  value="B"
+                />
+                <label for="reminder2" class="text-lg">B. 震动提醒</label>
+              </div>
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="reminder3"
+                  name="reminderMethod"
+                  value="C"
+                />
+                <label for="reminder3" class="text-lg">C. 视觉提醒</label>
+              </div>
+              <div class="checkbox-option">
+                <input
+                  type="checkbox"
+                  id="reminder4"
+                  name="reminderMethod"
+                  value="D"
+                />
+                <label for="reminder4" class="text-lg">D. 其他（请说明）</label>
+              </div>
+              <div id="otherReminderContainer" class="mt-2 hidden">
+                <input
+                  type="text"
+                  name="otherReminder"
+                  placeholder="请说明其他提醒方式"
+                  class="w-full p-3 border border-gray-300 rounded-lg text-lg"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题13 -->
+          <div class="question-card">
+            <label class="form-label">13. 您对这类服务的付费意愿如何？</label>
+            <div class="space-y-2">
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="payment1"
+                  name="paymentWillingness"
+                  value="A"
+                />
+                <label for="payment1" class="text-lg">A. 愿意每月支付</label>
+              </div>
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="payment2"
+                  name="paymentWillingness"
+                  value="B"
+                />
+                <label for="payment2" class="text-lg">B. 仅在免费时使用</label>
+              </div>
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="payment3"
+                  name="paymentWillingness"
+                  value="C"
+                />
+                <label for="payment3" class="text-lg">C. 不愿支付</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题14 -->
+          <div class="question-card">
+            <label class="form-label"
+              >14. 您觉得社区/政府是否应该提供这类安全检测服务？</label
+            >
+            <div class="space-y-2">
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="communitySupport1"
+                  name="communitySupport"
+                  value="A"
+                />
+                <label for="communitySupport1" class="text-lg">A. 是</label>
+              </div>
+              <div class="radio-option">
+                <input
+                  type="radio"
+                  id="communitySupport2"
+                  name="communitySupport"
+                  value="B"
+                />
+                <label for="communitySupport2" class="text-lg">B. 否</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 问题15 -->
+          <div class="question-card">
+            <label class="form-label"
+              >15. 您最希望这类应用能解决您的哪一个主要问题？（开放题）</label
+            >
+            <textarea
+              name="mainExpectation"
+              rows="5"
+              class="w-full p-3 border border-gray-300 rounded-lg text-lg"
+              placeholder="请输入您的想法..."
+            ></textarea>
+          </div>
+
+          <!-- 提交按钮 -->
+          <div class="text-center mt-8">
+            <button type="submit" class="btn-primary">
+              <i class="fa fa-paper-plane mr-2"></i>提交问卷
+            </button>
+          </div>
+        </form>
+
+        <!-- 提交成功提示 -->
+        <div id="successMessage" class="hidden section-card text-center py-10">
+          <i class="fa fa-check-circle text-5xl text-green-500 mb-4"></i>
+          <h2 class="text-2xl font-bold text-green-600 mb-2">感谢您的参与！</h2>
+          <p class="text-lg">
+            您的回答对我们非常重要，我们会认真对待每一份问卷。
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-6 mt-12">
+      <div class="container mx-auto px-4 text-center">
+        <p>项目联系邮箱：elderly-safety@example.com</p>
+        <p>联系电话：138-XXXX-XXXX</p>
+        <p class="mt-2">© 2023 独居老人安全检测研究项目组 版权所有</p>
+      </div>
+    </footer>
+
+    <script>
+      // 导航平滑滚动
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // 处理量表选项选择
+      const handleScaleSelection = (containerId, hiddenInputId) => {
+        const container = document.getElementById(containerId);
+        const hiddenInput = document.getElementById(hiddenInputId);
+        const options = container.querySelectorAll(".scale-option");
+
+        options.forEach((option) => {
+          option.addEventListener("click", () => {
+            options.forEach((opt) => opt.classList.remove("selected"));
+            option.classList.add("selected");
+            hiddenInput.value = option.getAttribute("data-value");
+          });
+        });
+      };
+
+      // 初始化所有量表
+      handleScaleSelection("contactFrequency", "contactFrequencyValue");
+      handleScaleSelection("appWillingness", "appWillingnessValue");
+      handleScaleSelection("wearableUsage", "wearableUsageValue");
+      handleScaleSelection("emergencyButton", "emergencyButtonValue");
+
+      // 处理"其他"选项显示/隐藏
+      const toggleOtherField = (checkboxId, containerId) => {
+        const checkbox = document.getElementById(checkboxId);
+        const container = document.getElementById(containerId);
+
+        checkbox.addEventListener("change", () => {
+          container.classList.toggle("hidden", !checkbox.checked);
+        });
+      };
+
+      // 初始化所有"其他"选项
+      toggleOtherField("help6", "otherHelpContainer");
+      toggleOtherField("notify6", "otherNotifyContainer");
+      toggleOtherField("reminder4", "otherReminderContainer");
+
+      // 表单提交处理
+      const form = document.getElementById("surveyForm");
+      const successMessage = document.getElementById("successMessage");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // 实际项目中，这里应该是异步发送表单数据的代码
+
+        // 隐藏表单，显示成功提示（可选）
+        form.classList.add("hidden");
+        successMessage.classList.remove("hidden");
+        successMessage.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        console.log("问卷提交成功，5秒后将跳转...");
+
+        // *** 新增的跳转代码：5秒后跳转到 entrance.html ***
+        setTimeout(() => {
+          window.location.href = "entrance.html";
+        }, 5000); // 5000毫秒 = 5秒
+      });
+
+      // 老年用户友好交互：聚焦时滚动到元素
+      document.querySelectorAll("input, textarea").forEach((element) => {
+        element.addEventListener("focus", () => {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+      });
+    </script>
+  </body>
+</html>
